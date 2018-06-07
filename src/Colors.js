@@ -32,23 +32,44 @@ class Colors extends Component {
   state = {
     duration: 5,
     selectedColors: Object.keys(colors),
+    speak: false,
   };
 
-  toggleColor = value => {
-    const newColors = this.state.selectedColors.includes(value) ? without(this.state.selectedColors, value) : [...this.state.selectedColors, value];
-    this.setState({ selectedColors: newColors });
+  componentDidUpdate() {
+    console.log(this.state);
+    localStorage.setItem('colorState', JSON.stringify(this.state));
+    return true;
   }
 
-  updateDuration = event => {
-    this.setState({ duration: parseInt(event.target.value)});
+  componentDidMount() {
+    try {
+      const localState = JSON.parse(localStorage.getItem('colorState'));
+      console.log(localState);
+      this.setState(localState);
+    } catch (error) {
+      //
+    }
+    this.intervalId = setInterval(this.resetTimer, 5000);
   }
+
+  toggleColor = value => {
+    const newColors = this.state.selectedColors.includes(value)
+      ? without(this.state.selectedColors, value)
+      : [...this.state.selectedColors, value];
+    this.setState({ selectedColors: newColors });
+  };
+
+  updateDuration = event => {
+    this.setState({ duration: parseInt(event.target.value) });
+  };
+
+  toggleSpeak = () => {
+    this.setState({ speak: !this.state.speak });
+  };
+
   resetTimer = () => {
     this.forceUpdate();
   };
-
-  componentDidMount() {
-    this.intervalId = setInterval(this.resetTimer, 5000);
-  }
 
   isBonusRound = () => {
     const percentChance = 30;
@@ -78,20 +99,24 @@ class Colors extends Component {
     bgColor.setAlpha(0.3);
     const backgroundColor = isBonus ? '#222' : bgColor.toRgbString();
 
-    const synth = window.speechSynthesis;
-    const voiceLine = new SpeechSynthesisUtterance(`${hand} ${isBonus ? hold : name}`);
-    synth.speak(voiceLine);
+    if (this.state.speak) {
+      const synth = window.speechSynthesis;
+      const voiceLine = new SpeechSynthesisUtterance(`${hand} ${isBonus ? hold : name}`);
+      synth.speak(voiceLine);
+    }
 
     return (
       <div className="colors" style={{ backgroundColor }}>
         {/* <Timer className="timer"/> */}
-        <div className="timer" style={{ animationDuration: `${this.state.duration}s` }}/>
+        <div className="timer" style={{ animationDuration: `${this.state.duration}s` }} />
         <div className="inner">
-          <div/>
+          <div />
           <div className="message">
             <span className="hand">{hand}</span>{' '}
             {isBonus ? (
-              <span className="hold" style={{ color: '#fff' }}>{hold}</span>
+              <span className="hold" style={{ color: '#fff' }}>
+                {hold}
+              </span>
             ) : (
               <span className="color" style={{ color: value }}>
                 {name}
@@ -100,12 +125,27 @@ class Colors extends Component {
           </div>
           <div className="options">
             <div className="duration-selector">
-              <input type="text" value={this.state.duration} onChange={this.updateDuration}/> seconds
+              <label>
+                <input type="checkbox" checked={this.state.speak} onChange={this.toggleSpeak} /> speak
+              </label>
+            </div>
+            <div className="duration-selector">
+              <input type="text" value={this.state.duration} onChange={this.updateDuration} /> seconds
             </div>
             <div className="color-selector">
-              {Object.keys(colors).map(c => 
-                <div key={c} className="color-option"><label><input type="checkbox" onChange={() => this.toggleColor(c)} checked={this.state.selectedColors.includes(c)} value={c}/> {c}</label></div>
-              )}
+              {Object.keys(colors).map(c => (
+                <div key={c} className="color-option">
+                  <label>
+                    <input
+                      type="checkbox"
+                      onChange={() => this.toggleColor(c)}
+                      checked={this.state.selectedColors.includes(c)}
+                      value={c}
+                    />{' '}
+                    {c}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         </div>
