@@ -35,16 +35,15 @@ class Colors extends Component {
     speak: false,
   };
 
-  componentDidUpdate() {
-    console.log(this.state);
+  saveState = () => {
+    console.log('Saving state: ', this.state);
     localStorage.setItem('colorState', JSON.stringify(this.state));
-    return true;
   }
 
   componentDidMount() {
     try {
       const localState = JSON.parse(localStorage.getItem('colorState'));
-      console.log(localState);
+      console.log('Loaded previous state: ', localState);
       this.setState(localState);
     } catch (error) {
       //
@@ -56,15 +55,16 @@ class Colors extends Component {
     const newColors = this.state.selectedColors.includes(value)
       ? without(this.state.selectedColors, value)
       : [...this.state.selectedColors, value];
-    this.setState({ selectedColors: newColors });
+    this.setState({ selectedColors: newColors }, this.saveState);
   };
 
   updateDuration = event => {
-    this.setState({ duration: parseInt(event.target.value) });
+    const seconds = parseInt(event.target.value);
+    this.setState({ duration: isNaN(seconds) ? '' : seconds }, this.saveState);
   };
 
   toggleSpeak = () => {
-    this.setState({ speak: !this.state.speak });
+    this.setState({ speak: !this.state.speak }, this.saveState);
   };
 
   resetTimer = () => {
@@ -130,7 +130,7 @@ class Colors extends Component {
               </label>
             </div>
             <div className="duration-selector">
-              <input type="text" value={this.state.duration} onChange={this.updateDuration} /> seconds
+              <input type="number" value={this.state.duration || ''} onChange={this.updateDuration} /> seconds
             </div>
             <div className="color-selector">
               {Object.keys(colors).map(c => (
@@ -147,7 +147,9 @@ class Colors extends Component {
                 </div>
               ))}
             </div>
-            <div className="github"><a href="https://github.com/SachaG/ClimbingColors">github</a></div>
+            <div className="github">
+              <a href="https://github.com/SachaG/ClimbingColors">github</a>
+            </div>
           </div>
         </div>
       </div>
