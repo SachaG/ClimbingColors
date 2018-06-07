@@ -78,6 +78,10 @@ class Colors extends Component {
     bgColor.setAlpha(0.3);
     const backgroundColor = isBonus ? '#222' : bgColor.toRgbString();
 
+    const synth = window.speechSynthesis;
+    const voiceLine = new SpeechSynthesisUtterance(`${hand} ${isBonus ? hold : name}`);
+    synth.speak(voiceLine);
+
     return (
       <div className="colors" style={{ backgroundColor }}>
         {/* <Timer className="timer"/> */}
