@@ -147,6 +147,7 @@ class Colors extends Component {
                 </div>
               ))}
             </div>
+            <div className="github"><a href="https://github.com/SachaG/ClimbingColors">github</a></div>
           </div>
         </div>
       </div>

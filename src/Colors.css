@@ -1,4 +1,4 @@
-.colors{
+.colors {
   display: flex;
   height: 100%;
   width: 100%;
@@ -7,7 +7,7 @@
   position: relative;
 }
 
-.inner{
+.inner {
   position: relative;
   z-index: 10;
   display: flex;
@@ -18,12 +18,12 @@
   padding: 20px;
 }
 
-.message{
+.message {
   font-size: 5rem;
   font-weight: bold;
 }
 
-.hand{
+.hand {
   color: #666;
 }
 
@@ -36,7 +36,7 @@
   }
 }
 
-.timer{
+.timer {
   position: absolute;
   top: 0;
   left: 0;
@@ -51,7 +51,7 @@
   transform-origin: top;
 }
 
-.options{
+.options {
   position: relative;
   border: 1px solid #333;
   padding: 20px;
@@ -59,18 +59,23 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.duration-selector{
+.duration-selector {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-.color-selector{
+.color-selector {
   display: flex;
   margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
-.color-option{
+.color-option {
   margin: 0 10px;
   font-weight: bold;
+}
+
+.github a {
+  font-size: 10px;
+  color: #333;
 }
